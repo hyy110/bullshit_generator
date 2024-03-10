@@ -1,4 +1,4 @@
-import { readFileSync, write, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve, join } from 'path';
 
@@ -16,7 +16,12 @@ function loadCorpus(src) {
 
 function writeArticle(title, article) {
     const text = `${title}\n\n   ${article.join('\n\n   ')}`;
-    const outputPath = resolve(__dirname, 'output/output.txt');
+    const path = resolve(__dirname, 'output');
+    if (!existsSync(path)) {
+        mkdirSync(path);
+    }
+
+    const outputPath = join(path, 'output.txt');
 
     writeFileSync(outputPath, text);
 }
