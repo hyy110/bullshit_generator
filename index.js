@@ -2,10 +2,8 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
-const url = import.meta.url;
-const path = resolve(dirname(fileURLToPath(url)), 'corpus/data.json');
-const data = readFileSync(path, {encoding: 'utf-8'})
+import { generator } from './lib/generator';
+import { createRandomPicker } from './lib/random';
 
-console.log(data);
-console.log(fileURLToPath(url));
-console.log(path);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
