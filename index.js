@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync, write, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve, join } from 'path';
 
@@ -14,10 +14,18 @@ function loadCorpus(src) {
     return JSON.parse(data);
 }
 
+function writeArticle(title, article) {
+    const text = `${title}\n\n   ${article.join('\n\n   ')}`;
+    const outputPath = resolve(__dirname, 'output/output.txt');
+
+    writeFileSync(outputPath, text);
+}
+
 const corpus = loadCorpus('corpus/data.json');
 
 const pickTitle = createRandomPicker(corpus.title);
 const title = pickTitle();
 
 const article = generator(title, {corpus});
-console.log(`${title}\n\n       ${article.join('\n      ')}`);
+
+writeArticle(title, article);
