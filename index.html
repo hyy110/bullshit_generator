@@ -20,10 +20,9 @@
     <main>
       <article></article>
     </main>
+    <script src="./dist/index.js"></script>
     <script type="module">
-        import { generate } from './lib/generator.js'
-        import { createRandomPicker } from './lib/random.js';
-
+        const { generate, createRandomPicker, loadCorpus } = bullshitGenerator;
         const options = document.querySelector('.options');
         const config = {min: 2000, max: 5000};
         options.addEventListener('change', ({target}) => {
@@ -38,7 +37,7 @@
         const titleEl = document.getElementById('title');
 
         (async function() {
-          const corpus = await (await fetch('./corpus/data.json')).json();
+          const corpus = await loadCorpus();
           const pickTitle = createRandomPicker(corpus.title);
           titleEl.value = pickTitle();
           generateButton.addEventListener('click', () => {
