@@ -1,6 +1,6 @@
 import { options } from './lib/cmd.js'
 import { loadCorpus, writeArticle } from './lib/corpus.js'
-import { generator } from './lib/generator.js';
+import { generate } from './lib/generator.js';
 import { interact } from './lib/interact.js';
 import { createRandomPicker } from './lib/random.js';
 
@@ -19,7 +19,7 @@ let title = options.title || createRandomPicker(corpus.title)();
         options.max = answers[2];
     }
 
-    const article = generator(title, {corpus, ...options});
+    const article = generate(title, {corpus, ...options});
     const output = writeArticle(title, article);
     console.log('生成成功！');
 }());
