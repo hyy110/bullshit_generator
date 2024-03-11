@@ -1,11 +1,25 @@
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { options } from './lib/cmd.js'
+import { loadCorpus, writeArticle } from './lib/corpus.js'
+import { generate } from './lib/generator.js';
+import { interact } from './lib/interact.js';
+import { createRandomPicker } from './lib/random.js';
 
-const url = import.meta.url;
-const path = resolve(dirname(fileURLToPath(url)), 'corpus/data.json');
-const data = readFileSync(path, {encoding: 'utf-8'})
+const corpus = loadCorpus('corpus/data.json');
+let title = options.title || createRandomPicker(corpus.title)();
+(async function () {
+    if (Object.keys(options).length <= 0) {
+        const answers = await interact([
+            {text: '请输入文章主题', value: title},
+            {text: '请输入最小字数', value: 6000},
+            {text: '请输入最大字数', value: 10000},
+        ])
 
-console.log(data);
-console.log(fileURLToPath(url));
-console.log(path);
+        title = answers[0];
+        options.min = answers[1];
+        options.max = answers[2];
+    }
+
+    const article = generate(title, {corpus, ...options});
+    const output = writeArticle(title, article);
+    console.log('生成成功！');
+}());
